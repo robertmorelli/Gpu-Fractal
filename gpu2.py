@@ -1,6 +1,7 @@
 import numpy as np
 import pyopencl as cl
 import png
+from datetime import datetime
 
 size=9
 side=2**(size)
@@ -12,7 +13,7 @@ __kernel void tsquare(__global char *res_g){
       int gid = get_global_id(0);
       uint x=gid% side;
       uint y=gid/ side;
-      res_g[gid] = 255*popcount(popcount(popcount(popcount(((x<<1)&(x)^2)&((y<<1)&(y)^2)))));
+      res_g[gid] = 255*popcount(popcount(popcount(popcount(((x<<1)&(x))&((y<<1)&(y))))));
   }
 """
 program=program.replace("side",str(side))
@@ -35,10 +36,10 @@ file=open("which.txt","w")
 file.write(num)
 file.close()
 
-
-file=open("Progdata"+num+".txt","x")
+idee=num+str(datetime.now()).replace(":","--").replace(".","-")
+file=open("Progdata"+idee+".txt","x")
 file.write(program)
 file.close()
 
-png.from_array(res_np,info={"width": side,"height":side}, mode="L").save("testing"+num+".png")
+png.from_array(res_np,info={"width": side,"height":side}, mode="L").save("testing"+idee+".png")
 print("...and saved")
