@@ -35,5 +35,5 @@ file=open("which.txt","w")
 file.write(num)
 file.close()
 
-png.from_array(res_np,info={"width": side,"height":side}, mode="L").save("testing"+num+".png")
+png.from_array(res_np,info={"width": side,"height":side}, mode="L").save("serp"+num+".png")
 print("...and saved")

@@ -35,10 +35,10 @@ file=open("which.txt","w")
 file.write(num)
 file.close()
 
-
-file=open("Progdata"+num+".txt","x")
+idee=num+str(datetime.now()).replace(":","--").replace(".","-")
+file=open("Progdata"+idee+".txt","x")
 file.write(program)
 file.close()
 
-png.from_array(res_np,info={"width": side,"height":side}, mode="L").save("testing"+num+".png")
+png.from_array(res_np,info={"width": side,"height":side}, mode="L").save("tsquare"+idee+".png")
 print("...and saved")
