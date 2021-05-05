@@ -3,7 +3,7 @@ import pyopencl as cl
 import png
 from datetime import datetime
 
-size=9
+size=12
 side=2**(size)
 total=side**2
 ctx = cl.create_some_context()
@@ -11,9 +11,17 @@ queue = cl.CommandQueue(ctx)
 program="""
 __kernel void tsquare(__global char *res_g){
       int gid = get_global_id(0);
-      uint x=gid% side;
-      uint y=gid/ side;
-      res_g[gid] = 255*popcount(popcount(popcount(popcount(((x<<1)&(x))&((y<<1)&(y))))));
+      ulong x=gid% side;
+      ulong y=gid/ side;
+      //s i z e size
+      //s i d e side
+      
+      res_g[gid] = 255*popcount(popcount(popcount(popcount(
+      (
+            ( ( (x<<2)&~(1<<(size+1)) )  ^ ( (x<<1)&~(1<<size) )  ^  (x&~1) )
+      &     ( ( (y<<2)&~(1<<(size+1)) )  ^ ( (y<<1)&~(1<<size) )  ^  (y&~1) )
+      )
+      ))));//(~(1|(1<<(size-1))))&
   }
 """
 program=program.replace("side",str(side))

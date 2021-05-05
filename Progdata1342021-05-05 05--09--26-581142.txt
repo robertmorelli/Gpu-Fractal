@@ -1,0 +1,14 @@
+
+__kernel void tsquare(__global char *res_g){
+      int gid = get_global_id(0);
+      ulong x=gid% 4096;
+      ulong y=gid/ 4096;
+      //s i z e 12
+      //s i d e 4096
+      
+      res_g[gid] = 255*popcount(popcount(popcount(popcount(
+
+      (((x<<1)&~(1<<12))  ^~  (x&~1))    &   ((((y<<1)&~(1<<12))  ^~  (y&~1)))
+
+      ))));//(~(1|(1<<(12-1))))&
+  }
