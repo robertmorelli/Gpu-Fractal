@@ -1,0 +1,32 @@
+
+__kernel void chronch(__global char *res_g){
+      int gid = get_global_id(0)/3;///3;
+      //int rgb = get_global_id(0)%3;
+      
+      ulong x=gid% 2048;
+      ulong y=gid/ 2048;
+      //s i z e 11
+      //s i d e 2048
+      
+      res_g[gid*3] = 10*((popcount(popcount(
+      (
+      ((x<<11)^(x&2048))&((y<<11)^(y&2048))
+      )
+      ))))
+      *
+      10*((popcount(popcount(
+      (
+      (((2048-x)<<11)^((2048-x)&2048))&(((2048-y)<<11)^((2048-y)&2048))
+      )
+      ))))
+      ;
+      res_g[gid*3+1] = res_g[gid*3]*((popcount(popcount(
+      (
+            ( ( (x<<1)&~(1<<11) )  ^  (x&~1) )
+      &     ( ( (y<<1)&~(1<<11) )  ^  (y&~1) )
+      )
+      ))));
+      res_g[gid*3+2]=res_g[gid*3];
+
+      
+  }
