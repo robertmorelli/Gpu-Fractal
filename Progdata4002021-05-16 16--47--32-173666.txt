@@ -1,0 +1,23 @@
+
+__kernel void chronch(__global char *res_g){
+      //s i d e 1024
+      //s i z e 10
+
+      uint gid = get_global_id(0);
+      float r=(gid/(1024.0*1024.0*3.0));
+      float band=(2*((gid%1024)/(1024.0))-1);
+
+      float xf=(r*(400.0-200.0)*band)+200.0;
+      float yf=(r*(300.0-800.0)*band)+800.0;
+
+
+      float xl=(r*(700.0-400.0))+400.0;
+      float yl=(r*(900.0-300.0))+300.0;
+
+      uint x=(r*(xl-xf))+xf;
+      uint y=(r*(yl-yf))+yf;
+
+      res_g[3*(x+y*1024)]=(((band+1)/2)*((band+1)/2)*232+20)*.8;
+      res_g[3*(x+y*1024)+1]=res_g[3*(x+y*1024)];
+      res_g[3*(x+y*1024)+2]=(1-((band+1)/2))*(1-((band+1)/2))*255;
+  }

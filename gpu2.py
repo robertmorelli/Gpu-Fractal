@@ -11,37 +11,31 @@ side3=3*side
 total=side3*side
 ctx = cl.create_some_context()
 queue = cl.CommandQueue(ctx)
+
+bezcurve=((20,80),(40,30),(70,90))
+
 program="""
 __kernel void chronch(__global char *res_g){
-      int gid = get_global_id(0)/3;///3;
-      //int rgb = get_global_id(0)%3;
-      
-      ulong x=gid% side;
-      ulong y=gid/ side;
-      //s i z e size
       //s i d e side
+      //s i z e size
 
-      res_g[gid*3+1] = 10*((popcount(popcount(
-      (((x<<2)^(x))&((y<<2)^(y)))&~((3<<11)|3)
-      ))));
-      res_g[gid*3] = (res_g[gid*3+1]+10)*(10*(((popcount(
-      (
-      ((x<<size)^(x&side))&((y<<size)^(y&side))
-      )
-      ))))+10)
-      *
-      (10*(((popcount(
-      (
-      (((side-x)<<size)^((side-x)&side))&(((side-y)<<size)^((side-y)&side))
-      )
-      ))))+10)
-      ;
-      
-      res_g[gid*3+2]=(255-10*popcount(
-      (((x<<1)&~(1<<12))&~(x&~1))&((((y<<1)&~(1<<12))&~(y&~1)))
-      ));
+      uint gid = get_global_id(0);
+      float r=(gid/(side.0*side.0*3.0));
+      float band=(2*((gid%side)/(side.0))-1);
 
-      
+      float xf=(r*(400.0-200.0)*band)+200.0;
+      float yf=(r*(300.0-800.0)*band)+800.0;
+
+
+      float xl=(r*(700.0-400.0))+400.0;
+      float yl=(r*(900.0-300.0))+300.0;
+
+      uint x=(r*(xl-xf))+xf;
+      uint y=(r*(yl-yf))+yf;
+
+      res_g[3*(x+y*side)]=(((band+1)/2)*((band+1)/2)*232+20)*.8;
+      res_g[3*(x+y*side)+1]=res_g[3*(x+y*side)];
+      res_g[3*(x+y*side)+2]=(1-((band+1)/2))*(1-((band+1)/2))*225+30;
   }
 """
 program=program.replace("side3",str(side3))
